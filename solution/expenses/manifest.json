@@ -1,0 +1,10 @@
+{
+  "runtime": {
+    "majorVersion": "8"
+  },
+  "command": "java -jar expenses-1.0.0.jar",
+  "release": {
+    "version": "1.0"
+  },
+  "notes": "A simple REST API for managing expenses"
+}
