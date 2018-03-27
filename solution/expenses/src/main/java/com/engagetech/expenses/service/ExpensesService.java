@@ -53,7 +53,7 @@ public class ExpensesService {
      */
     private boolean isValid(Expense expense) {
         return expense != null
-                && expense.getDate() != null && expense.getValue() != null
+                && expense.getDate() != null && expense.getAmount() != null
                 && expense.getReason() != null && !expense.getReason().isEmpty();
     }
 

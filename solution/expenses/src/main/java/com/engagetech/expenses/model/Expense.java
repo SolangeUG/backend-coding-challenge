@@ -30,10 +30,11 @@ public class Expense implements Serializable {
 
     @Column(name = "expdate", nullable = false)
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date date;
 
-    @Column(name = "expvalue", nullable = false)
-    private Double value;
+    @Column(name = "expamount", nullable = false)
+    private Double amount;
 
     @Column(name = "expreason", nullable = false)
     private String reason;
@@ -48,6 +49,7 @@ public class Expense implements Serializable {
     @LastModifiedDate
     private Date updatedOn;
 
+
     /**
      * Default constructor
      */
@@ -58,13 +60,13 @@ public class Expense implements Serializable {
     /**
      * Constructor
      * @param date the expense date
-     * @param value the expense value
+     * @param amount the expense amount
      * @param reason the reason for the expense
      */
-    public Expense(Date date, Double value, String reason) {
+    public Expense(Date date, Double amount, String reason) {
         super();
         this.date = date;
-        this.value = value;
+        this.amount = amount;
         this.reason = reason;
     }
 
@@ -93,6 +95,14 @@ public class Expense implements Serializable {
     }
 
     /**
+     * Return the associated VAT
+     * @return VAT actual value
+     */
+    public Double getVAT() {
+        return this.rate.getRate();
+    }
+
+    /**
      * Return the date of the expense
      * @return date
      */
@@ -109,19 +119,19 @@ public class Expense implements Serializable {
     }
 
     /**
-     * Return the value of the expense
-     * @return value
+     * Return the amount of the expense
+     * @return amount
      */
-    public Double getValue() {
-        return value;
+    public Double getAmount() {
+        return amount;
     }
 
     /**
-     * Set expense value
-     * @param value expense value
+     * Set expense amount
+     * @param amount expense amount
      */
-    public void setValue(Double value) {
-        this.value = value;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     /**
@@ -169,7 +179,7 @@ public class Expense implements Serializable {
      * object is an instance, the at-sign character `{@code @}', and
      * the unsigned hexadecimal representation of the hash code of the
      * object. In other words, this method returns a string equal to the
-     * value of:
+     * amount of:
      * <blockquote>
      * <pre>
      * getClass().getName() + '@' + Integer.toHexString(hashCode())
@@ -183,7 +193,7 @@ public class Expense implements Serializable {
                 " id: " + id +
                 " rate: " + rate +
                 " date: " + date +
-                " value: " + value +
+                " amount: " + amount +
                 " reason: " + reason +
                 "}";
     }

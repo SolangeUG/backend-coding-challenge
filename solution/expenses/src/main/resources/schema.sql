@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS vat_rate (
 CREATE TABLE IF NOT EXISTS expenses (
     expId           INT         PRIMARY KEY,
     rateid          INT         REFERENCES vat_rate(rateid),
-    expvalue        REAL        NOT NULL,
+    expamount       REAL        NOT NULL,
     expdate         DATE        NOT NULL,
     expreason       TEXT        NOT NULL,
     created_on      TIMESTAMP   DEFAULT now() NOT NULL,
