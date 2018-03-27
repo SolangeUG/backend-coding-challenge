@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     expamount       REAL        NOT NULL,
     expdate         DATE        NOT NULL,
     expreason       TEXT        NOT NULL,
+    expvatamount    REAL        NOT NULL,
     created_on      TIMESTAMP   DEFAULT now() NOT NULL,
     updated_on      TIMESTAMP   DEFAULT now() NOT NULL
 );

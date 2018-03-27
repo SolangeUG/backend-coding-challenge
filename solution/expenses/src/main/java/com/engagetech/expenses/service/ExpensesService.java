@@ -40,6 +40,14 @@ public class ExpensesService {
         } else {
             ValueAddedTaxRate current = vatRateRepository.findEnabled();
             expense.setRate(current);
+
+            // in case VAT amount is not supplied by client
+            if (expense.getVAT() == null) {
+                // compute VAT actual amount
+                Double vat = (current.getRate() * expense.getAmount()) / 100;
+                expense.setVAT(vat);
+            }
+
             expensesRepository.save(expense);
             return true;
         }

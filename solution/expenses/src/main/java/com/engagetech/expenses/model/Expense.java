@@ -1,13 +1,15 @@
 package com.engagetech.expenses.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -39,6 +41,9 @@ public class Expense implements Serializable {
 
     @Column(name = "expreason", nullable = false)
     private String reason;
+
+    @Column(name = "expvatamount", nullable = false)
+    private Double vat;
 
     @Column(name ="createdOn", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -100,8 +105,15 @@ public class Expense implements Serializable {
      * @return VAT actual value
      */
     public Double getVAT() {
-        //  VAT = amount * VAT rate / 100
-        return (rate.getRate() * amount) / 100;
+        return vat;
+    }
+
+    /**
+     * Set actual VAT amount
+     * @param vatAmount actual VAT value on this expense
+     */
+    public void setVAT(Double vatAmount) {
+        this.vat = vatAmount;
     }
 
     /**
@@ -193,9 +205,9 @@ public class Expense implements Serializable {
     public String toString() {
         return "{" +
                 " id: " + id +
-                " rate: " + rate +
                 " date: " + date +
                 " amount: " + amount +
+                " VAT: " + vat +
                 " reason: " + reason +
                 "}";
     }
