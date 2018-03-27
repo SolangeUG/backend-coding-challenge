@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,14 +28,15 @@ public class ExpensesController {
      */
     @PostMapping(value = "${application.api.expenses.endpoint}")
     @ResponseBody
-    public ResponseEntity<List<Expense>> createExpense(@RequestBody Expense expense) {
-        if (expenseService.addExpense(expense)) {
-            // TODO #3: change the response body returned value from list of expenses to string for example
-            // TODO #3: return "Saved" on success and "One or more required fields is empty" on failure
-            List<Expense> expenses = expenseService.getAllExpenses();
-            return new ResponseEntity<>(expenses, HttpStatus.CREATED);
+    public ResponseEntity<String> createExpense(@RequestBody Expense expense) {
+        boolean result = expenseService.addExpense(expense);
+        String response;
+        if (result) {
+            response = "{\"message\":\"Expense successfully added!\"}";
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            response = "{\"message\":\"Expense creation failed!\"}";
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
