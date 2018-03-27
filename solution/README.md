@@ -48,7 +48,7 @@ spring.security.user.roles = <ROLE>
 
 - The **frontend configuration should be updated** to access the backend API at the above server address. For example, in this case, the `apiRoot` property (in `config.js`) will be set to `http://<hostname>:<port>/app`.
 
-- Furthermore, as the backend is only accessible after authentication (Spring user), the **frontend must be configured** to allow session based authentication with the `Access-Control-Allow-Credentials: true` header. In `config.js`, adding the following lines will do the trick.
+- Furthermore, as the backend is only accessible after authentication (Spring user), the **frontend must be configured** to allow session based authentication with the `Access-Control-Allow-Credentials: true` header. In `main.js`, adding the following lines will do the trick.
 
 ````JavaScript
 app.config(['$httpProvider', function ($httpProvider) {
