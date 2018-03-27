@@ -9,11 +9,12 @@ Tasks main
 require("./expenses-controller.js");
 
 var app = angular.module("expenses.controllers", [
-	"expenses.controller"
+	"expenses.controller", ["ngCookies"]
 ]);
 
 app.config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.defaults.withCredentials = true;
+    // Configure $http requests to allow session based authentication
+	$httpProvider.defaults.withCredentials = true;
 }]);
 
 app.config(["$routeProvider", function($routeProvider) {
