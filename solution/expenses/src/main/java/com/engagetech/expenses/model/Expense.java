@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -95,11 +96,12 @@ public class Expense implements Serializable {
     }
 
     /**
-     * Return the associated VAT
+     * Return the VAT amount on this expense
      * @return VAT actual value
      */
     public Double getVAT() {
-        return this.rate.getRate();
+        //  VAT = amount * VAT rate / 100
+        return (rate.getRate() * amount) / 100;
     }
 
     /**
