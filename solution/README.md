@@ -46,6 +46,17 @@ spring.security.user.roles = <ROLE>
 
 - When the server is up and running, the REST API will be accessible at the server address configured earlier (`<hostname>:<port>`) after authentication (`<username>` and `<password>`).
 
+- The **frontend configuration should be updated** to access the backend API at the above server address. For example, in this case, the `apiRoot` property (in `config.js`) will be set to `http://<hostname>:<port>/app`.
+
+- Furthermore, as the backend is only accessible after authentication (Spring user), the **frontend must be configured** to allow session based authentication with the `Access-Control-Allow-Credentials: true` header. In `config.js`, adding the following lines will do the trick.
+
+````JavaScript
+app.config(['$httpProvider', function ($httpProvider) {
+    // Configure $http requests to allow session based authentication
+	$httpProvider.defaults.withCredentials = true;
+}]);
+````
+
 
 [1]: https://docs.oracle.com/en/java/
 [2]: http://www.vogella.com/tutorials/REST/article.html
