@@ -16,8 +16,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "${application.api.path}",
-        consumes = {"application/json; charset=UTF-8", "text/plain", "text/html"},
-        produces = {"application/json; charset=UTF-8"})
+                produces = {"application/json; charset=UTF-8"})
 public class ExpensesController {
 
     @Autowired
