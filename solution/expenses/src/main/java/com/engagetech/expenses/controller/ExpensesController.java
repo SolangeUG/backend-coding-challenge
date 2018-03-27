@@ -32,10 +32,10 @@ public class ExpensesController {
         boolean result = expenseService.addExpense(expense);
         String response;
         if (result) {
-            response = "{\"message\":\"Expense successfully added!\"}";
+            response = "{\"message\":\"Expense successfully saved.\"}";
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
-            response = "{\"message\":\"Expense creation failed!\"}";
+            response = "{\"message\":\"Expense creation failed. Invalid input value(s).\"}";
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }

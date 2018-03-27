@@ -7,6 +7,11 @@ import com.engagetech.expenses.repository.ValueAddedTaxRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,9 +65,17 @@ public class ExpensesService {
      *         false otherwise
      */
     private boolean isValid(Expense expense) {
-        return expense != null
-                && expense.getDate() != null && expense.getAmount() != null
-                && expense.getReason() != null && !expense.getReason().isEmpty();
+        boolean valid = expense != null
+                            && expense.getDate() != null && expense.getAmount() != null
+                            && expense.getReason() != null && !expense.getReason().isEmpty();
+
+        // Check date validity
+        if (valid) {
+            Date now = new Date();
+            valid = expense.getDate().before(now);
+        }
+
+        return valid;
     }
 
 }
