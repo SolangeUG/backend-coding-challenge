@@ -9,7 +9,7 @@ Tasks main
 require("./expenses-controller.js");
 
 var app = angular.module("expenses.controllers", [
-	"expenses.controller", ["ngCookies"]
+	"expenses.controller"
 ]);
 
 app.config(['$httpProvider', function ($httpProvider) {
