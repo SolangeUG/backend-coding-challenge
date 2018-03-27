@@ -32,6 +32,8 @@ public class ExpensesController {
     @ResponseBody
     public ResponseEntity<List<Expense>> createExpense(@RequestBody Expense expense) {
         if (expenseService.addExpense(expense)) {
+            // TODO #3: change the response body returned value from list of expenses to string for example
+            // TODO #3: return "Saved" on success and "One or more required fields is empty" on failure
             List<Expense> expenses = expenseService.getAllExpenses();
             return new ResponseEntity<>(expenses, HttpStatus.CREATED);
         } else {
