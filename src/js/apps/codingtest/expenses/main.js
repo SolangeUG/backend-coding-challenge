@@ -12,6 +12,10 @@ var app = angular.module("expenses.controllers", [
 	"expenses.controller"
 ]);
 
+app.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+}]);
+
 app.config(["$routeProvider", function($routeProvider) {
 	// Labour analysis routes
 	$routeProvider.when("/expenses", { templateUrl: "codingtest/expenses-content.html" });
