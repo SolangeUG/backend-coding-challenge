@@ -1,5 +1,6 @@
 package com.engagetech.expenses.service;
 
+import com.engagetech.expenses.model.Currency;
 import com.engagetech.expenses.model.Expense;
 import com.engagetech.expenses.model.ValueAddedTaxRate;
 import com.engagetech.expenses.repository.ExpensesRepository;
@@ -51,6 +52,16 @@ public class ExpensesService {
                 // compute VAT actual amount
                 Double vat = (current.getRate() * expense.getAmount()) / 100;
                 expense.setVAT(vat);
+            }
+
+            // in case the amount is supplied in EUR
+            switch (expense.getCurrency()) {
+                case EUR:
+                    // TODO : convert amount to GBP
+                    
+                    break;
+                default:
+                    break;
             }
 
             expensesRepository.save(expense);

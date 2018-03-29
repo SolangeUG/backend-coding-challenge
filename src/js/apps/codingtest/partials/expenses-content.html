@@ -11,13 +11,19 @@
 				<label>Date</label>
 				<input type="text" ng-required="true" ng-model="newExpense.date" ui-date="dateOptions" placeholder="dd/mm/yyyy" />
 			</li>
-			<li>
+			<li class="row">
 				<label>Amount</label>
 				<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" />
+				<!-- Currency choice -->
+				<input type="text" ng-required="true" ng-model="newExpense.currency" placeholder="GBP" class="col-2" />
+			</li>
+			<li class="row">
+				<label>VAT</label>
+				<input type="text" placeholder="VAT" class="col-2" disabled/>
 			</li>
 			<li>
 				<label>Reason</label>
-					<textarea at-auto-resize ng-required="true" ng-model="newExpense.reason" ng-trim="false" placeholder="why oh why?"></textarea>
+				<textarea at-auto-resize ng-required="true" ng-model="newExpense.reason" ng-trim="false" placeholder="why oh why?"></textarea>
 			</li>
 			<li>
 				<label></label>

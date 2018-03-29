@@ -45,6 +45,9 @@ public class Expense implements Serializable {
     @Column(name = "expvatamount", nullable = false)
     private Double vat;
 
+    //@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    private Currency currency;
+
     @Column(name ="createdOn", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
@@ -74,6 +77,18 @@ public class Expense implements Serializable {
         this.date = date;
         this.amount = amount;
         this.reason = reason;
+    }
+
+    /**
+     * Constructor
+     * @param date date of the expense
+     * @param amount the expense amount
+     * @param currency expense currency
+     * @param reason the reason for the expense
+     */
+    public Expense(Date date, Double amount, Currency currency, String reason) {
+        this(date, amount, reason);
+        this.currency = currency;
     }
 
     /**
@@ -162,6 +177,22 @@ public class Expense implements Serializable {
      */
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    /**
+     * Return this expense's currency
+     * @return this expense's currency
+     */
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    /**
+     * Set a currency for this expense
+     * @param currency currency
+     */
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     /**
