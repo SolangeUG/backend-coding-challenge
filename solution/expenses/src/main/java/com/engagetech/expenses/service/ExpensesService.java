@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * A simple expenses service implementation
+ * A simple expenses business service implementation
  */
 @Service
 public class ExpensesService {
@@ -31,10 +31,10 @@ public class ExpensesService {
     private ValueAddedTaxRateRepository vatRateRepository;
 
     @Value("${application.currency.converter.api.path}")
-    public String apipath;
+    private String apipath;
 
     @Value("${application.currency.converter.api.key}")
-    public String apiKey;
+    private String apiKey;
 
     /**
      * Return a list of all expenses
@@ -56,13 +56,6 @@ public class ExpensesService {
             ValueAddedTaxRate current = vatRateRepository.findEnabled();
             expense.setRate(current);
 
-            // in case VAT amount is not supplied by client
-            if (expense.getVAT() == null) {
-                // compute VAT actual amount
-                Double vat = (current.getRate() * expense.getAmount()) / 100;
-                expense.setVAT(vat);
-            }
-
             // in case the amount is supplied in EUR
             switch (expense.getCurrency()) {
                 case EUR:
@@ -73,6 +66,13 @@ public class ExpensesService {
                     break;
             }
 
+            // in case VAT amount is not supplied by client
+            // ie: not computed on the frontend
+            if (expense.getVAT() == null) {
+                // compute VAT actual amount
+                Double vat = (current.getRate() * expense.getAmount()) / 100;
+                expense.setVAT(vat);
+            }
             expensesRepository.save(expense);
             return true;
         }
@@ -106,23 +106,50 @@ public class ExpensesService {
     private Double convertAmount(Expense expense) {
         Double result = expense.getAmount();
 
-        String requestURL = apipath + "?from={eur}&to={gbp}&quantity={amount}&api_key={key}";
+        if (apipath != null && !apipath.isEmpty()
+                && apiKey != null && ! apiKey.isEmpty()) {
 
-        RestTemplate restTemplate = new RestTemplate();
-        String jsonResult =
-                restTemplate.getForObject(requestURL,String.class,
-                    requestURL, Currency.EUR.toString(), Currency.GBP.toString(), expense.getAmount(),apiKey);
+            /*
+            The API call to retrieve the exchange rate looks like:
+                http://data.fixer.io/api/latest?access_key=apiKey&symbols=GBP&format=1
+            In return, we get a JSON object:
+                {
+                    "success":true,
+                        "timestamp":1522339443,
+                        "base":"EUR",
+                        "date":"2018-03-29",
+                        "rates":{
+                            "GBP":0.876292
+                        }
+                }
+            */
 
-        if (! jsonResult.isEmpty()) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                JsonNode node = mapper.readTree(jsonResult);
-                result = node.get("value").asDouble();
-            } catch (IOException exception) {
-                // do nothing for the time being
+            String requestURL =
+                    apipath
+                        + "?access_key=" + apiKey
+                        + "&symbols=" + Currency.GBP.toString()
+                        + "&format=1";
+
+            RestTemplate restTemplate = new RestTemplate();
+            String jsonResult = restTemplate.getForObject(requestURL, String.class);
+
+            if (! jsonResult.isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    JsonNode node = mapper.readTree(jsonResult);
+                    Boolean success = node.get("success").asBoolean();
+                    if (success) {
+                        Double rate = node.get("rates").get("GBP").asDouble();
+                        result = result * rate;
+                    }
+                } catch (IOException exception) {
+                    // do nothing for the time being
+                }
             }
-        }
+            
+            restTemplate.delete(requestURL);
 
+        }
         return result;
     }
 
