@@ -5,13 +5,16 @@ import com.engagetech.expenses.model.Expense;
 import com.engagetech.expenses.model.ValueAddedTaxRate;
 import com.engagetech.expenses.repository.ExpensesRepository;
 import com.engagetech.expenses.repository.ValueAddedTaxRateRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +29,12 @@ public class ExpensesService {
 
     @Autowired
     private ValueAddedTaxRateRepository vatRateRepository;
+
+    @Value("${application.currency.converter.api.path}")
+    public String apipath;
+
+    @Value("${application.currency.converter.api.key}")
+    public String apiKey;
 
     /**
      * Return a list of all expenses
@@ -57,8 +66,8 @@ public class ExpensesService {
             // in case the amount is supplied in EUR
             switch (expense.getCurrency()) {
                 case EUR:
-                    // TODO : convert amount to GBP
-                    
+                    Double convertedAmount = convertAmount(expense);
+                    expense.setAmount(convertedAmount);
                     break;
                 default:
                     break;
@@ -87,6 +96,34 @@ public class ExpensesService {
         }
 
         return valid;
+    }
+
+    /**
+     * Convert expense amount from EUR to GBP
+     * @param expense input expense
+     * @return result of conversion
+     */
+    private Double convertAmount(Expense expense) {
+        Double result = expense.getAmount();
+
+        String requestURL = apipath + "?from={eur}&to={gbp}&quantity={amount}&api_key={key}";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonResult =
+                restTemplate.getForObject(requestURL,String.class,
+                    requestURL, Currency.EUR.toString(), Currency.GBP.toString(), expense.getAmount(),apiKey);
+
+        if (! jsonResult.isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                JsonNode node = mapper.readTree(jsonResult);
+                result = node.get("value").asDouble();
+            } catch (IOException exception) {
+                // do nothing for the time being
+            }
+        }
+
+        return result;
     }
 
 }
