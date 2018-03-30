@@ -59,20 +59,20 @@ public class ExpensesService {
             // in case the amount is supplied in EUR
             switch (expense.getCurrency()) {
                 case EUR:
-                    Double convertedAmount = convertAmount(expense);
+                    // change amount into GBP
+                    Double exchangeRate = getExchangeRate();
+                    Double convertedAmount = exchangeRate * expense.getAmount();
                     expense.setAmount(convertedAmount);
                     break;
+
                 default:
                     break;
             }
 
-            // in case VAT amount is not supplied by client
-            // ie: not computed on the frontend
-            if (expense.getVAT() == null) {
-                // compute VAT actual amount
-                Double vat = (current.getRate() * expense.getAmount()) / 100;
-                expense.setVAT(vat);
-            }
+            // update VAT amount:
+            Double vat = (current.getRate() * expense.getAmount()) / 100;
+            expense.setVAT(vat);
+
             expensesRepository.save(expense);
             return true;
         }
@@ -99,12 +99,11 @@ public class ExpensesService {
     }
 
     /**
-     * Convert expense amount from EUR to GBP
-     * @param expense input expense
-     * @return result of conversion
+     * Return latest exchange rate from EUR to GBP
+     * @return currency exchange rate
      */
-    private Double convertAmount(Expense expense) {
-        Double result = expense.getAmount();
+    private Double getExchangeRate() {
+        Double exchangeRate = 1.0;
 
         if (apipath != null && !apipath.isEmpty()
                 && apiKey != null && ! apiKey.isEmpty()) {
@@ -126,9 +125,9 @@ public class ExpensesService {
 
             String requestURL =
                     apipath
-                        + "?access_key=" + apiKey
-                        + "&symbols=" + Currency.GBP.toString()
-                        + "&format=1";
+                            + "?access_key=" + apiKey
+                            + "&symbols=" + Currency.GBP.toString()
+                            + "&format=1";
 
             RestTemplate restTemplate = new RestTemplate();
             String jsonResult = restTemplate.getForObject(requestURL, String.class);
@@ -139,18 +138,17 @@ public class ExpensesService {
                     JsonNode node = mapper.readTree(jsonResult);
                     Boolean success = node.get("success").asBoolean();
                     if (success) {
-                        Double rate = node.get("rates").get("GBP").asDouble();
-                        result = result * rate;
+                        exchangeRate = node.get("rates").get("GBP").asDouble();
                     }
                 } catch (IOException exception) {
                     // do nothing for the time being
                 }
             }
-            
-            restTemplate.delete(requestURL);
 
+            restTemplate.delete(requestURL);
         }
-        return result;
+
+        return exchangeRate;
     }
 
 }
