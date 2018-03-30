@@ -12,12 +12,14 @@ var app = angular.module("expenses.controllers", [
 	"expenses.controller"
 ]);
 
-app.config(['$httpProvider', function ($httpProvider) {
+app.config(["$httpProvider", "$routeProvider", function($httpProvider, $routeProvider) {
     // Configure $http requests to allow session based authentication
-	$httpProvider.defaults.withCredentials = true;
-}]);
+    $httpProvider.defaults.withCredentials = true;
 
-app.config(["$routeProvider", function($routeProvider) {
+    // Enabling CSRF protection
+    $httpProvider.defaults.xsrfCookieName = "_csrf";
+    $httpProvider.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+
 	// Labour analysis routes
 	$routeProvider.when("/expenses", { templateUrl: "codingtest/expenses-content.html" });
 
