@@ -29,7 +29,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 		restExpenses.get().then(function(expenses) {
 			$scope.expenses = expenses;
 		});
-	}
+	};
 
 	$scope.saveExpense = function() {
 		if ($scope.expensesform.$valid) {
@@ -43,6 +43,12 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 
 	$scope.clearExpense = function() {
 		$scope.newExpense = {};
+	};
+
+	// Update VAT value as the user encodes expense amount
+	$scope.updateVAT = function() {
+		$scope.newExpense.VAT
+			= ($scope.newExpense.amount * 20) / 100;
 	};
 
 	// Initialise scope variables

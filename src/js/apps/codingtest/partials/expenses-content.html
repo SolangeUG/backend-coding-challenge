@@ -13,15 +13,15 @@
 			</li>
 			<li class="row">
 				<label>Amount</label>
-				<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" />
+				<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" ng-blur="updateVAT()"/>
 				<!-- Currency choice -->
 				<input type="text" ng-required="true" ng-model="newExpense.currency" name="currency"
-					   placeholder="GBP" class="column" ng-pattern="/^(?:^|\s)(EUR|GBP)(?=\s|$)/i"/>
-                <label ng-show="expensesform.currency.$error.pattern" class="smaller invalid">GBP or EUR.</label>
+					   placeholder="GBP" class="currency-option" ng-pattern="/^(?:^|\s)(EUR|GBP)(?=\s|$)/i"/>
+                <label ng-show="expensesform.currency.$error.pattern" class="message">GBP/EUR</label>
             </li>
 			<li class="row">
 				<label>VAT</label>
-				<input type="text" placeholder="VAT" class="col-2" disabled/>
+				<input type="text" placeholder="VAT" ng-model="newExpense.VAT" disabled/>
 			</li>
 			<li>
 				<label>Reason</label>
