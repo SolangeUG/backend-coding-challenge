@@ -156,9 +156,9 @@ gulp.task("html", function() {
 
 // Compile an individual directory's partials
 function compilePartials(filepath) {
-	/*if (process.platform === "win32")
+	if (process.platform === "win32")
 		var pathArray = filepath.split("\\");
-	else*/
+	else
 		var pathArray = filepath.split("/");
 
 	pathArray.pop();
@@ -173,12 +173,10 @@ function compilePartials(filepath) {
 			htmlMinifier: settings.minifiy,
 			module: basename + ".partials",
 			path: function(path, base) {
-				if (process.platform === "win32")
-					var pathArray = path.split("\\");
-				else
-					pathArray = path.split("/");
+				if (!base.endsWith("partials/"))
+					base += "partials/";
 
-				return basename + "/" + pathArray.pop();
+				return basename + "/" + path.replace(base, "");
 			}
 		}))
 		.pipe(uglify(settings.uglify))
