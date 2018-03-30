@@ -16,8 +16,8 @@
 				<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" ng-blur="updateVAT()"/>
 				<!-- Currency choice -->
 				<input type="text" ng-required="true" ng-model="newExpense.currency" name="currency"
-					   placeholder="GBP" class="currency-option" ng-pattern="/^(?:^|\s)(EUR|GBP)(?=\s|$)/i"/>
-                <label ng-show="expensesform.currency.$error.pattern" class="message">GBP/EUR</label>
+					   placeholder="GBP" class="currency-option" ng-pattern="/^(?:^|\s)(EUR|GBP)(?=\s|$)/"/>
+                <label ng-show="expensesform.currency.$error.pattern" class="invalid">GBP/EUR</label>
             </li>
 			<li class="row">
 				<label>VAT</label>
