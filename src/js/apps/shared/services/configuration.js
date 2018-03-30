@@ -5,5 +5,6 @@ var gulpEnvConfig = { /*{{gulp-env-config}}*/ };
 
 app.constant("config", {
 	apiroot: gulpEnvConfig.apiroot,
-	staticRoot: gulpEnvConfig.staticRoot
+	staticRoot: gulpEnvConfig.staticRoot,
+	vatRate: gulpEnvConfig.vatRate
 });

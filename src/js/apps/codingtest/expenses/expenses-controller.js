@@ -47,8 +47,9 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 
 	// Update VAT value as the user encodes expense amount
 	$scope.updateVAT = function() {
-		$scope.newExpense.VAT
-			= ($scope.newExpense.amount * 20) / 100;
+		var rate = parseFloat($config.vatRate);
+		$scope.newExpense.vat
+			= ($scope.newExpense.amount * rate) / 100;
 	};
 
 	// Initialise scope variables
