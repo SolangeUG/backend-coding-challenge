@@ -1,5 +1,6 @@
 package com.engagetech.expenses.controller;
 
+import com.engagetech.expenses.model.Currency;
 import com.engagetech.expenses.model.Expense;
 import com.engagetech.expenses.model.ValueAddedTaxRate;
 import com.engagetech.expenses.service.ExpensesService;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -55,9 +57,6 @@ public class ExpensesControllerTests {
     @MockBean
     private ExpensesService service;
 
-    @Autowired
-    private ExpensesController controller;
-
 
     @Test
     @DisplayName("GET Request should return a 200 status code")
@@ -70,17 +69,19 @@ public class ExpensesControllerTests {
     }
 
     @Test
-    @DisplayName("POST Request should return a 206 status code")
+    @DisplayName("POST Request should return a 201 status code")
     public void shouldReturn2xxWhenSendingPostRequestToController() throws Exception {
         ValueAddedTaxRate rate = new ValueAddedTaxRate(21.0, true);
         Expense expense =
                 new Expense(
                         new SimpleDateFormat("dd/MM/yyyy").parse("24/03/2018"),
                         205.50,
+                        Currency.GBP,
                         "Accomodation");
+        expense.setVAT(43.155);
         expense.setRate(rate);
 
-        given(service.addExpense(expense)).willReturn(true);
+        given(service.addExpense(Mockito.any(Expense.class))).willReturn(true);
 
         String url = apiPath + endpoint + "/";
         mvc.perform(post(url)
@@ -118,6 +119,7 @@ public class ExpensesControllerTests {
      * Convert Expense object to Json bytes
      * @param expense expense object to convert
      * @return Json bytes
+     * @throws IOException exception
      */
     private byte[] getJsonBytes(Expense expense) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

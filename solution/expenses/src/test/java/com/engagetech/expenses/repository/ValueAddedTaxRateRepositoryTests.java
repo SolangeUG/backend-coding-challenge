@@ -37,7 +37,7 @@ public class ValueAddedTaxRateRepositoryTests {
         manager.flush();
 
         ValueAddedTaxRate entity = repository.findEnabled();
-        assertTrue(entity != null);
+        assertNotNull(entity);
         assertTrue(entity.getEnabled());
         assertNotEquals(4.4, entity.getRate());
     }
@@ -48,7 +48,7 @@ public class ValueAddedTaxRateRepositoryTests {
         // by default, there is one "enabled" entry in the vat_rate table
         // this test should be able to retrieve that entity
         ValueAddedTaxRate entity = repository.findEnabled();
-        assertTrue(entity != null);
+        assertNotNull(entity);
         assertTrue(entity.getEnabled());
         assertNotNull(entity.getRate());
     }
