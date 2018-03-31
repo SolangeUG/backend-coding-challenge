@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Expense entity class
@@ -33,7 +34,8 @@ public class Expense implements Serializable {
 
     @Column(name = "expdate", nullable = false)
     @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy",
+                locale = "en-UK", timezone = "Europe/Brussels")
     private Date date;
 
     @Column(name = "expamount", nullable = false)
@@ -45,7 +47,6 @@ public class Expense implements Serializable {
     @Column(name = "expvatamount", nullable = false)
     private Double vat;
 
-    //@JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private Currency currency;
 
     @Column(name ="createdOn", nullable = false, updatable = false)
