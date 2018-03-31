@@ -1,5 +1,6 @@
 package com.engagetech.expenses.service;
 
+import com.engagetech.expenses.model.Currency;
 import com.engagetech.expenses.model.Expense;
 import com.engagetech.expenses.model.ValueAddedTaxRate;
 import com.engagetech.expenses.repository.ExpensesRepository;
@@ -8,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -64,13 +66,16 @@ public class ExpensesServiceTests {
 
         Mockito.when(repository.getAllExpenses())
                 .thenReturn(expenses);
+
+        Mockito.when(vatRepository.findEnabled())
+                .thenReturn(current);
     }
 
     @Test
     @DisplayName("Should return true when creating a new well formed expense")
     public void shouldReturnTrueOnCreatingWellFormedExpense() throws Exception {
         Date date = dateFormat.parse("04/02/2018");
-        Expense expense = new Expense(date, 54.45, "Transport");
+        Expense expense = new Expense(date, 54.45, Currency.GBP,"Transport");
         expense.setRate(current);
 
         boolean result = service.addExpense(expense);
@@ -81,7 +86,7 @@ public class ExpensesServiceTests {
     @DisplayName("Should return false when creating a new ill formed expense")
     public void shouldReturnFalseOnCreatingIllFormedExpense() throws Exception {
         Date date = dateFormat.parse("08/02/2018");
-        Expense expense = new Expense(date, 540.45, "");
+        Expense expense = new Expense(date, 540.45, Currency.GBP, "");
         expense.setRate(current);
 
         boolean result = service.addExpense(expense);

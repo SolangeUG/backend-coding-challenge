@@ -56,7 +56,7 @@ public class SecurityConfigurationTests {
     }
 
     @Test
-    @DisplayName("A user with the bad credentials should be denied access")
+    @DisplayName("A user with bad credentials should be denied access")
     public void shouldRefuseAccessToUserWithBadCredentials() {
         template = new TestRestTemplate(
                 "unauthorized_user", "unauthorized_password");
