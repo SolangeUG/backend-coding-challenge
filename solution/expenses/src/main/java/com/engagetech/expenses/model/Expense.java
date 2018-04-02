@@ -34,8 +34,7 @@ public class Expense implements Serializable {
 
     @Column(name = "expdate", nullable = false)
     @Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy",
-                locale = "en-UK", timezone = "Europe/Brussels")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date date;
 
     @Column(name = "expamount", nullable = false)
