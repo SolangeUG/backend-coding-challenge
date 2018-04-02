@@ -40,6 +40,12 @@ spring.security.user.name = <username>
 spring.security.user.password = <password>
 spring.security.user.roles = <ROLE>
 
+## Configure time zone and locale globally
+# <timezone> can be something like Europe/London for example
+# <locale> can be something like en-UK
+spring.jackson.time-zone = <timezone>
+spring.jackson.locale = <locale>
+
 ````
 
 For currency conversion, we're using [Fixer][6] as our foreign exchange rates and currency conversion API provider.  
